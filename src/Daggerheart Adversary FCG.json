@@ -1,0 +1,300 @@
+{
+	"id": "daggerheart-adversary-fcg",
+	"name": "Daggerheart Adversary FCG",
+	"blocks": [
+		{
+			"type": "group",
+			"id": "fcg-name-image-group",
+			"nested": [
+				{
+					"type": "inline",
+					"id": "fcg-name-image-inline",
+					"properties": [],
+					"nested": [
+						{
+							"type": "heading",
+							"id": "fcg-name",
+							"size": 1,
+							"properties": [
+								"name"
+							],
+							"fallback": "-"
+						},
+						{
+							"type": "image",
+							"id": "fcg-image",
+							"properties": [
+								"image"
+							],
+							"fallback": "-",
+							"conditioned": true
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "fcg-basics-group",
+			"hasRule": true,
+			"nested": [
+				{
+					"type": "inline",
+					"id": "fcg-tier-type-inline",
+					"properties": [],
+					"nested": [
+						{
+							"type": "text",
+							"id": "fcg-tier",
+							"properties": [
+								"tier"
+							],
+							"callback": "return `<b><i>Tier ${monster.tier ?? '-'}</i></b>`",
+							"fallback": "-",
+							"conditioned": true
+						},
+						{
+							"type": "text",
+							"id": "fcg-type",
+							"properties": [
+								"type"
+							],
+							"callback": "return `<b><i>${monster.type ?? '-'}</i></b>`",
+							"fallback": "-",
+							"conditioned": true
+						}
+					]
+				},
+				{
+					"type": "property",
+					"id": "fcg-shortdesc",
+					"properties": [
+						"shortDescription"
+					],
+					"callback": "return monster.shortDescription ?? '-'",
+					"fallback": "-",
+					"conditioned": true
+				},
+				{
+					"type": "repeater",
+					"id": "motives-repeater",
+					"properties": [
+						"motivesAndTactics"
+					],
+					"display": "Motives & Tactics:",
+					"fallback": "-",
+					"conditioned": true,
+					"nested": [
+						{
+							"type": "text",
+							"id": "motives-item",
+							"properties": [
+								"."
+							],
+							"fallback": "-"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "fcg-statblock-group",
+			"properties": [],
+			"hasRule": true,
+			"nested": [
+				{
+					"type": "group",
+					"id": "core-stats",
+					"properties": [],
+					"hasRule": true,
+					"nested": [
+						{
+							"type": "property",
+							"id": "difficulty",
+							"display": "Difficulty",
+							"properties": [
+								"difficulty"
+							],
+							"fallback": "-"
+						},
+						{
+							"type": "property",
+							"id": "hp",
+							"display": "HP",
+							"properties": [
+								"hitPoints"
+							],
+							"fallback": "-"
+						},
+						{
+							"type": "property",
+							"id": "stress",
+							"display": "Stress",
+							"properties": [
+								"stress"
+							],
+							"fallback": "-"
+						},
+						{
+							"type": "property",
+							"id": "atk",
+							"display": "ATK",
+							"dice": true,
+							"properties": [
+								"attackModifier"
+							],
+							"fallback": "-"
+						},
+						{
+							"type": "text",
+							"id": "thresholds",
+							"properties": [],
+							"fallback": "-",
+							"callback": "return monster.damageThresholds ? `${monster.damageThresholds.major ?? '-'} / ${monster.damageThresholds.severe ?? '-'}` : 'None'"
+						}
+					]
+				},
+				{
+					"type": "inline",
+					"id": "weapon-group",
+					"properties": [],
+					"nested": [
+						{
+							"type": "text",
+							"id": "weapon-name",
+							"properties": [],
+							"fallback": "-",
+							"callback": "return `<b>${monster.weapon?.name ?? '-'}</b>`"
+						},
+						{
+							"type": "text",
+							"id": "weapon-separator-colon",
+							"properties": [],
+							"text": ":",
+							"fallback": "-"
+						},
+						{
+							"type": "text",
+							"id": "weapon-range",
+							"properties": [],
+							"fallback": "-",
+							"callback": "return monster.weapon?.range ?? '-'"
+						},
+						{
+							"type": "text",
+							"id": "weapon-separator-pipe",
+							"properties": [],
+							"text": "|",
+							"fallback": "-"
+						},
+						{
+							"type": "text",
+							"id": "weapon-damage",
+							"properties": [],
+							"fallback": "-",
+							"callback": "return monster.weapon?.damage ?? '-'"
+						}
+					]
+				},
+				{
+					"type": "text",
+					"id": "experience",
+					"properties": [],
+					"display": "Experience",
+					"conditioned": true,
+					"callback": "return !monster.experience || !monster.experience.length ? '' : monster.experience.join(', ')"
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "fcg-features-group",
+			"hasRule": true,
+			"nested": [
+				{
+					"type": "repeater",
+					"id": "features-repeater",
+					"properties": [
+						"features"
+					],
+					"display": "Features:",
+					"fallback": "-",
+					"conditioned": false,
+					"nested": [
+						{
+							"type": "heading",
+							"id": "feature-name",
+							"size": 4,
+							"properties": [
+								"name"
+							],
+							"callback": "return item?.name ?? '-'",
+							"fallback": "-"
+						},
+						{
+							"type": "inline",
+							"id": "feature-meta-inline",
+							"nested": [
+								{
+									"type": "property",
+									"id": "feature-type",
+									"properties": [
+										"type"
+									],
+									"class": "fcg-feature-type",
+									"callback": "return item?.type ?? '-'",
+									"fallback": "-"
+								},
+								{
+									"type": "text",
+									"id": "feature-meta-separator",
+									"text": " "
+								},
+								{
+									"type": "property",
+									"id": "feature-value",
+									"properties": [
+										"value"
+									],
+									"conditioned": true,
+									"class": "fcg-feature-value",
+									"callback": "return item?.value != null ? item.value : '-'",
+									"fallback": "-"
+								}
+							]
+						},
+						{
+							"type": "text",
+							"id": "feature-desc",
+							"properties": [
+								"description"
+							],
+							"class": "fcg-feature-desc",
+							"callback": "return item?.description ?? '-'",
+							"fallback": "-"
+						},
+						{
+							"type": "text",
+							"id": "feature-flavour-text",
+							"properties": [
+								"flavourText"
+							],
+							"class": "fcg-feature-flavour-text",
+							"callback": "return item?.flavourText ?? '-'",
+							"fallback": ""
+						}
+					]
+				}
+			]
+		}
+	],
+	"diceParsing": [
+		{
+			"id": "fcg-comma-separated-clean",
+			"desc": "Parses comma-separated dice expressions, ignores spaces, supports XdY, XdY+Z, chained dice, and standalone numbers. Each comma-separated chunk becomes one rollable.",
+			"regex": "([^,]+)",
+			"parser": "let expr = matches[1].trim();\nif (!expr) return null;\n\n// Remove spaces and normalize 'D' to lowercase 'd'\nexpr = expr.replace(/\\s*([dD+-])\\s*/g, m => m.trim().toLowerCase());\n\n// If the expression is a standalone number (e.g., '+3', '-2', '5'), convert to 1d20+N\nif (/^[+-]?\\d+$/.test(expr)) {\n  let n = Number(expr);\n  if (isNaN(n)) return null;\n  expr = `1d20${n >= 0 ? '+' : ''}${n}`;\n}\n\nreturn { text: expr, original };"
+		}
+	]
+}

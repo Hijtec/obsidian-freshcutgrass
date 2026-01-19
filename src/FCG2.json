@@ -1,0 +1,245 @@
+{
+	"blocks": [
+		{
+			"type": "inline",
+			"id": "387b295a6808",
+			"properties": [],
+			"nested": [
+				{
+					"type": "group",
+					"id": "09ba68b9ebe8",
+					"properties": [],
+					"nested": [
+						{
+							"type": "inline",
+							"id": "da8acbd8bb68",
+							"properties": [],
+							"nested": [
+								{
+									"type": "heading",
+									"id": "eb499b5b2bea",
+									"properties": [
+										"name"
+									],
+									"size": 1,
+									"fallback": "-",
+									"conditioned": true
+								},
+								{
+									"type": "inline",
+									"id": "0bd9e898a8e9",
+									"properties": [],
+									"nested": [
+										{
+											"type": "action",
+											"id": "fb1999b98aa8",
+											"icon": "sword",
+											"callback": "try { InitiativeTracker.newEncounter({roll: true, creatures: [monster]}); } catch(e) {}"
+										},
+										{
+											"type": "action",
+											"id": "1a38c8a81ac9",
+											"icon": "plus-circle",
+											"callback": "try { InitiativeTracker.addCreatures([monster]); } catch(e) {}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "property",
+							"id": "9bdaf81a7908",
+							"properties": [
+								"tier",
+								"type"
+							],
+							"fallback": "-",
+							"callback": "return `<b><i>Tier ${monster.tier ?? '-'} ${monster.type ?? '-'}</i></b>`",
+							"display": ""
+						},
+						{
+							"type": "property",
+							"id": "1bbbdb4b58c8",
+							"properties": [
+								"shortDescription"
+							],
+							"fallback": "-",
+							"conditioned": false,
+							"display": ""
+						},
+						{
+							"type": "property",
+							"id": "e9b8abbb4a7a",
+							"properties": [
+								"motivesAndTactics"
+							],
+							"fallback": "-",
+							"conditioned": true,
+							"display": "Motives & Tactics:"
+						}
+					]
+				},
+				{
+					"type": "image",
+					"id": "b9aac989986b",
+					"properties": [
+						"image"
+					],
+					"fallback": "-",
+					"conditioned": false
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "3a39e918abea",
+			"properties": [],
+			"nested": [
+				{
+					"type": "inline",
+					"id": "b82b7ba80b2b",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "480a6b681a78",
+							"properties": [
+								"difficulty"
+							],
+							"fallback": "-",
+							"display": "Difficulty:"
+						},
+						{
+							"type": "property",
+							"id": "2abbd9eae9bb",
+							"properties": [
+								"thresholds"
+							],
+							"fallback": "-",
+							"display": "| Thresholds:",
+							"callback": "return monster.damageThresholds ? `${monster.damageThresholds.major ?? '-'} / ${monster.damageThresholds.severe ?? '-'}` : 'None'"
+						},
+						{
+							"type": "property",
+							"id": "b9eb786bda9b",
+							"properties": [
+								"hitPoints"
+							],
+							"fallback": "-",
+							"display": "| HP:"
+						},
+						{
+							"type": "property",
+							"id": "1bc8d908f91a",
+							"properties": [
+								"stress"
+							],
+							"fallback": "-",
+							"display": "| Stress:"
+						}
+					]
+				},
+				{
+					"type": "inline",
+					"id": "194829791989",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "9ad8cb3abb7a",
+							"properties": [
+								"attackModifier"
+							],
+							"fallback": "-",
+							"display": "ATK:",
+							"dice": true
+						},
+						{
+							"type": "inline",
+							"id": "78caa9d8787b",
+							"properties": [],
+							"nested": [
+								{
+									"type": "property",
+									"id": "ea0a4808eb4a",
+									"properties": [
+										"weapon.name"
+									],
+									"fallback": "-",
+									"callback": "return `<b>${monster.weapon?.name ?? '-'}:</b>`",
+									"display": "|"
+								},
+								{
+									"type": "property",
+									"id": "7ba9695a095b",
+									"properties": [
+										"weapon.range"
+									],
+									"fallback": "-",
+									"callback": "return `${monster.weapon?.range ?? '-'}`",
+									"display": ""
+								},
+								{
+									"type": "property",
+									"id": "weapon-damage-dice",
+									"properties": [],
+									"fallback": "-",
+									"display": "|",
+									"dice": true,
+									"callback": "return (monster.weapon?.damage || '').match(/^(\\d+d\\d+(?:[+-]\\d+)*)/)?.[1] || '-'"
+								},
+								{
+									"type": "property",
+									"id": "weapon-damage-type",
+									"properties": [],
+									"fallback": "-",
+									"display": " ",
+									"callback": "const dmg = monster.weapon?.damage || ''; const m = dmg.match(/^[0-9]+d[0-9]+(?:[+-][0-9]+)*\\s*(.*)$/); return m?.[1]?.trim() || '-';"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "property",
+					"id": "7a69e8b8aaa9",
+					"properties": [
+						"experience"
+					],
+					"fallback": "-",
+					"display": "Experience:"
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "8aeb195a78a9",
+			"properties": [],
+			"nested": [
+				{
+					"type": "traits",
+					"id": "fcg-features-block",
+					"properties": [
+						"features"
+					],
+					"fallback": "-",
+					"heading": "Features",
+					"conditioned": true,
+					"headingProp": false,
+					"callback": "try {\n\tif (!property) return '';\n\n\tfunction esc(s) {\n\t\tif (s === null || s === undefined) return '';\n\t\treturn String(s).replace(/&/g, '&amp;')\n\t\t\t.replace(/</g, '&lt;')\n\t\t\t.replace(/>/g, '&gt;')\n\t\t\t.replace(/\"/g, '&quot;')\n\t\t\t.replace(/'/g, '&#039;');\n\t}\n\n\tfunction renderIcons(cost) {\n\t\t// return inline icon spans for each cost type (adjust SVGs if you prefer different icons)\n\t\tvar out = '';\n\t\tif (!cost) return out;\n\t\tif (cost.stress != null) {\n\t\t\tout += '<div class=\"fcg-icon fcg-icon-stress\" aria-label=\"' + esc(cost.stress) + ' Stress\"></div>';\n\t\t}\n\t\tif (cost.fear != null) {\n\t\t\tout += '<div class=\"fcg-icon fcg-icon-fear\" aria-label=\"' + esc(cost.fear) + ' Fear\"></div>';\n\t\t}\n\t\tif (cost.hitPoints != null) {\n\t\t\tout += '<div class=\"fcg-icon fcg-icon-hp\" aria-label=\"' + esc(cost.hitPoints) + ' HP\"></div>';\n\t\t}\n\t\treturn out;\n\t}\n\n\tfunction headerHtmlFor(f) {\n\t\t// Build the inner header markup (we will inject this into the host's outer .property-name)\n\t\tvar nameHtml = '<span class=\"header-name\">' + esc(f.name || '') + '</span>';\n\t\tvar valueHtml = (f.value !== undefined && f.value !== null) ? '<span class=\"header-value\">(' + esc(f.value) + ')</span>' : '';\n\t\tvar typeHtml = f.type ? '<span class=\"header-type\">' + esc(f.type) + '</span>' : '';\n\n\t\tvar inner = '<div class=\"statblock-markdown\"><p>';\n\t\tinner += nameHtml + '&nbsp;';\n\t\tif (valueHtml) inner += valueHtml + '&nbsp;';\n\t\tif (typeHtml) inner += '-&nbsp;<span class=\"header-type-wrap\"><span class=\"header-type-inner\">' + typeHtml + '</span></span>';\n\t\tinner += '</p></div>';\n\n\t\t// Return a small script that will find the nearest .property ancestor and\n\t\t// replace its .property-name content with our header. We JSON.stringify the\n\t\t// HTML to safely embed it in the script.\n\t\tvar script = '<script>(function(){try{var s=document.currentScript; var html=' + JSON.stringify(inner) + '; var prop = s.closest(\\'.property\\'); if(prop){var pn = prop.querySelector(\\'.property-name\\'); if(pn) pn.innerHTML = html;} s.remove();}catch(e){} })();<\\/script>';\n\t\treturn script;\n\t}\n\n\tfunction renderFeatureBody(f) {\n\t\tvar uses = (f.uses !== undefined && f.uses !== null) ? '<div class=\"uses\">Uses: ' + esc(f.uses) + '</div>' : '';\n\t\tvar costHtml = '';\n\t\tif (f.cost) {\n\t\t\tvar parts = [];\n\t\t\tif (f.cost.stress != null) parts.push('stress');\n\t\t\tif (f.cost.fear != null) parts.push('fear');\n\t\t\tif (f.cost.hitPoints != null) parts.push('hitPoints');\n\t\t\t// icons: show the icons block using renderIcons\n\t\t\tcostHtml = '<div class=\"cost-icons\">' + renderIcons(f.cost) + '</div>';\n\t\t}\n\t\tvar desc = f.description ? '<div class=\"desc\">' + esc(f.description) + '</div>' : '';\n\t\tvar flav = (f.flavourText || f.flavorText) ? '<div class=\"flavour\"><em>' + esc(f.flavourText || f.flavorText) + '</em></div>' : '';\n\t\treturn uses + costHtml + desc + flav;\n\t}\n\n\t// If plugin passes the whole array\n\tif (Array.isArray(property)) {\n\t\t// Group items under a single container so header is injected only once\n\t\tvar items = property.map(function (f, i) {\n\t\t\tvar rawValue = (f.value !== undefined && f.value !== null) ? ' (' + String(f.value) + ')' : '';\n\t\t\tvar rawType = f.type ? ' - ' + String(f.type) : '';\n\t\t\tvar rawHeader = (f.name || '') + rawValue + rawType;\n\t\t\tvar slug = String(rawHeader).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');\n\n\t\t\tvar nameHtml = (i === 0) ? headerHtmlFor(f) : '';\n\t\t\tvar bodyHtml = '<div class=\"statblock-markdown\">' + renderFeatureBody(f) + '</div>';\n\t\t\treturn '<div class=\"statblock-item-container statblock-trait-prop\"><div class=\"property ' + esc(slug) + ' features trait\">' + nameHtml + bodyHtml + '</div></div>';\n\t\t}).join('');\n\n\t\treturn '<div class=\"statblock-item-container traits-container\">' + items + '</div>';\n\t}\n\n\t// If plugin calls per-item, the renderer may print its own property-name; we still return\n\t// a property-name element in the body (so the header styling is consistent). The CSS snippet\n\t// below will hide the renderer's name when this inner property-name exists.\n\tvar nameHeader = headerHtmlFor(property);\n\tvar bodyContent = '<div class=\"statblock-markdown\">' + renderFeatureBody(property) + '</div>';\n\treturn nameHeader + bodyContent;\n} catch (e) {\n\treturn '';\n}\n"
+				}
+			]
+		}
+	],
+	"name": "FCG2",
+	"id": "b988780a1a98",
+	"diceParsing": [
+		{
+			"id": "fcg-comma-separated-clean",
+			"desc": "Parses comma-separated dice expressions, ignores spaces, supports XdY, XdY+Z, chained dice, and standalone numbers. Each comma-separated chunk becomes one rollable.",
+			"regex": "([^,]+)",
+			"parser": "let expr = matches[1].trim();\nif (!expr) return null;\n\n// Remove spaces and normalize 'D' to lowercase 'd'\nexpr = expr.replace(/\\s*([dD+-])\\s*/g, m => m.trim().toLowerCase());\n\n// If the expression is a standalone number (e.g., '+3', '-2', '5'), convert to 1d20+N\nif (/^[+-]?\\d+$/.test(expr)) {\n  let n = Number(expr);\n  if (isNaN(n)) return null;\n  expr = `1d20${n >= 0 ? '+' : ''}${n}`;\n}\n\nreturn { text: expr, original };"
+		}
+	],
+	"columnWidth": 500
+}

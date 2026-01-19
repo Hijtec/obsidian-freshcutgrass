@@ -1,0 +1,235 @@
+{
+	"blocks": [
+		{
+			"type": "inline",
+			"id": "387b295a6808",
+			"properties": [],
+			"nested": [
+				{
+					"type": "group",
+					"id": "09ba68b9ebe8",
+					"properties": [],
+					"nested": [
+						{
+							"type": "inline",
+							"id": "da8acbd8bb68",
+							"properties": [],
+							"nested": [
+								{
+									"type": "heading",
+									"id": "eb499b5b2bea",
+									"properties": [
+										"name"
+									],
+									"size": 1,
+									"fallback": "-",
+									"conditioned": true
+								},
+								{
+									"type": "inline",
+									"id": "0bd9e898a8e9",
+									"properties": [],
+									"nested": [
+										{
+											"type": "action",
+											"id": "fb1999b98aa8",
+											"icon": "sword",
+											"callback": "try { InitiativeTracker.newEncounter({roll: true, creatures: [monster]}); } catch(e) {}"
+										},
+										{
+											"type": "action",
+											"id": "1a38c8a81ac9",
+											"icon": "plus-circle",
+											"callback": "try { InitiativeTracker.addCreatures([monster]); } catch(e) {}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "property",
+							"id": "9bdaf81a7908",
+							"properties": [
+								"tier",
+								"type"
+							],
+							"fallback": "-",
+							"callback": "return `<b><i>Tier ${monster.tier ?? '-'} ${monster.type ?? '-'}</i></b>`",
+							"display": ""
+						},
+						{
+							"type": "property",
+							"id": "1bbbdb4b58c8",
+							"properties": [
+								"shortDescription"
+							],
+							"fallback": "-",
+							"conditioned": false,
+							"display": " "
+						},
+						{
+							"type": "property",
+							"id": "e9b8abbb4a7a",
+							"properties": [
+								"motivesAndTactics"
+							],
+							"fallback": "-",
+							"conditioned": true,
+							"display": "Motives & Tactics:"
+						}
+					]
+				},
+				{
+					"type": "image",
+					"id": "b9aac989986b",
+					"properties": [
+						"image"
+					],
+					"fallback": "-",
+					"conditioned": false
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "3a39e918abea",
+			"properties": [],
+			"nested": [
+				{
+					"type": "inline",
+					"id": "b82b7ba80b2b",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "480a6b681a78",
+							"properties": [
+								"difficulty"
+							],
+							"fallback": "-",
+							"display": "Difficulty:"
+						},
+						{
+							"type": "property",
+							"id": "2abbd9eae9bb",
+							"properties": [
+								"thresholds"
+							],
+							"fallback": "-",
+							"display": "| Thresholds:",
+							"callback": "return monster.damageThresholds ? `${monster.damageThresholds.major ?? '-'} / ${monster.damageThresholds.severe ?? '-'}` : 'None'"
+						},
+						{
+							"type": "property",
+							"id": "b9eb786bda9b",
+							"properties": [
+								"hitPoints"
+							],
+							"fallback": "-",
+							"display": "| HP:"
+						},
+						{
+							"type": "property",
+							"id": "1bc8d908f91a",
+							"properties": [
+								"stress"
+							],
+							"fallback": "-",
+							"display": "| Stress:"
+						}
+					]
+				},
+				{
+					"type": "inline",
+					"id": "194829791989",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "9ad8cb3abb7a",
+							"properties": [
+								"attackModifier"
+							],
+							"fallback": "-",
+							"display": "ATK:",
+							"dice": true
+						},
+						{
+							"type": "inline",
+							"id": "78caa9d8787b",
+							"properties": [],
+							"nested": [
+								{
+									"type": "property",
+									"id": "ea0a4808eb4a",
+									"properties": [
+										"weapon.name"
+									],
+									"fallback": "-",
+									"callback": "return `<b>${monster.weapon?.name ?? '-'}:</b>`",
+									"display": "|"
+								},
+								{
+									"type": "property",
+									"id": "7ba9695a095b",
+									"properties": [
+										"weapon.range"
+									],
+									"fallback": "-",
+									"callback": "return `${monster.weapon?.range ?? '-'}`",
+									"display": " "
+								},
+								{
+									"type": "property",
+									"id": "191acb4a48aa",
+									"properties": [
+										""
+									],
+									"fallback": "-",
+									"display": " ",
+									"callback": "return `${monster.weapon?.damage ?? '-'}`",
+									"dice": false,
+									"diceProperty": ""
+								},
+								{
+									"type": "text",
+									"id": "98fbc8e94a0b",
+									"properties": [],
+									"text": null
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "property",
+					"id": "7a69e8b8aaa9",
+					"properties": [
+						"experience"
+					],
+					"fallback": "-",
+					"display": "Experience:"
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "8aeb195a78a9",
+			"properties": [],
+			"nested": [
+				{
+					"type": "property",
+					"id": "3af978583bea",
+					"properties": [
+						"features"
+					],
+					"fallback": "-",
+					"display": "FEATURES"
+				}
+			]
+		}
+	],
+	"name": "FCG2 Copy",
+	"id": "5a1b5a2beb39",
+	"diceParsing": []
+}

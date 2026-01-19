@@ -1,0 +1,212 @@
+{
+	"name": "Daggerheart Adversary FCG2",
+	"blocks": [
+		{
+			"type": "inline",
+			"id": "387b295a6808",
+			"properties": [],
+			"nested": [
+				{
+					"type": "group",
+					"id": "09ba68b9ebe8",
+					"properties": [],
+					"nested": [
+						{
+							"type": "inline",
+							"id": "da8acbd8bb68",
+							"properties": [],
+							"nested": [
+								{
+									"type": "heading",
+									"id": "eb499b5b2bea",
+									"properties": [
+										"name"
+									],
+									"size": 1,
+									"fallback": "-",
+									"conditioned": true
+								},
+								{
+									"type": "inline",
+									"id": "0bd9e898a8e9",
+									"properties": [],
+									"nested": [
+										{
+											"type": "action",
+											"id": "fb1999b98aa8",
+											"icon": "sword",
+											"callback": "try { InitiativeTracker.newEncounter({roll: true, creatures: [monster]}); } catch(e) {}"
+										},
+										{
+											"type": "action",
+											"id": "1a38c8a81ac9",
+											"icon": "plus-circle",
+											"callback": "try { InitiativeTracker.addCreatures([monster]); } catch(e) {}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "property",
+							"id": "9bdaf81a7908",
+							"properties": [
+								"tier",
+								"type"
+							],
+							"fallback": "-",
+							"callback": "return `<b><i>Tier ${monster.tier ?? '-'} ${monster.type ?? '-'}</i></b>`",
+							"display": ""
+						},
+						{
+							"type": "property",
+							"id": "1bbbdb4b58c8",
+							"properties": [
+								"shortDescription"
+							],
+							"fallback": "-",
+							"conditioned": false,
+							"display": " "
+						},
+						{
+							"type": "property",
+							"id": "e9b8abbb4a7a",
+							"properties": [
+								"motivesAndTactics"
+							],
+							"fallback": "-",
+							"conditioned": true,
+							"display": "Motives & Tactics:"
+						}
+					]
+				},
+				{
+					"type": "image",
+					"id": "b9aac989986b",
+					"properties": [
+						"image"
+					],
+					"fallback": "-",
+					"conditioned": false
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "3a39e918abea",
+			"properties": [],
+			"nested": [
+				{
+					"type": "inline",
+					"id": "b82b7ba80b2b",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "480a6b681a78",
+							"properties": [
+								"difficulty"
+							],
+							"fallback": "-",
+							"display": "Difficulty:"
+						},
+						{
+							"type": "property",
+							"id": "2abbd9eae9bb",
+							"properties": [
+								"thresholds"
+							],
+							"fallback": "-",
+							"display": "| Thresholds:",
+							"callback": "return monster.damageThresholds ? `${monster.damageThresholds.major ?? '-'} / ${monster.damageThresholds.severe ?? '-'}` : 'None'"
+						},
+						{
+							"type": "property",
+							"id": "b9eb786bda9b",
+							"properties": [
+								"hitPoints"
+							],
+							"fallback": "-",
+							"display": "| HP:"
+						},
+						{
+							"type": "property",
+							"id": "1bc8d908f91a",
+							"properties": [
+								"stress"
+							],
+							"fallback": "-",
+							"display": "| Stress:"
+						}
+					]
+				},
+				{
+					"type": "inline",
+					"id": "194829791989",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "9ad8cb3abb7a",
+							"properties": [
+								"attackModifier"
+							],
+							"fallback": "-",
+							"dice": true,
+							"display": "ATK:"
+						},
+						{
+							"type": "inline",
+							"id": "78caa9d8787b",
+							"properties": [],
+							"nested": [
+								{
+									"type": "property",
+									"id": "ea0a4808eb4a",
+									"properties": [
+										"weapon.name"
+									],
+									"fallback": "-",
+									"callback": "return `<b>${monster.weapon?.name ?? '-'}:</b>`",
+									"display": "|"
+								},
+								{
+									"type": "property",
+									"id": "7ba9695a095b",
+									"properties": [
+										"weapon.range"
+									],
+									"fallback": "-",
+									"callback": "return `${monster.weapon?.range ?? '-'}`",
+									"display": " "
+								},
+								{
+									"type": "property",
+									"id": "191acb4a48aa",
+									"properties": [
+										"weapon.damage"
+									],
+									"fallback": "-",
+									"display": "|",
+									"callback": "return `${monster.weapon?.damage ?? '-'}`",
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"id": "ebaadb7a89b9",
+	"cssProperties": {
+		"propertyNameFontWeight": "700"
+	},
+	"diceParsing": [
+		{
+			"id": "fcg-comma-separated-clean",
+			"desc": "Parses comma-separated dice expressions, ignores spaces, supports XdY, XdY+Z, chained dice, and standalone numbers. Each comma-separated chunk becomes one rollable.",
+			"regex": "([^,]+)",
+			"parser": "let expr = matches[1].trim();\nif (!expr) return null;\n\n// Remove spaces and normalize 'D' to lowercase 'd'\nexpr = expr.replace(/\\s*([dD+-])\\s*/g, m => m.trim().toLowerCase());\n\n// If the expression is a standalone number (e.g., '+3', '-2', '5'), convert to 1d20+N\nif (/^[+-]?\\d+$/.test(expr)) {\n  let n = Number(expr);\n  if (isNaN(n)) return null;\n  expr = `1d20${n >= 0 ? '+' : ''}${n}`;\n}\n\nreturn { text: expr, original };"
+		}
+	]
+}

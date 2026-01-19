@@ -1,0 +1,32 @@
+/* Icon styles for feature-parser.js
+   We use small inline (data-URI) SVGs as background-images so the parser
+   can output simple <div class="fcg-icon fcg-icon-..."> elements.
+   If you prefer to change the icons, replace the data URIs below with your own.
+*/
+.fcg-icon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	margin-right: 6px;
+	vertical-align: middle;
+	/* inherit theme text color so embedded SVGs using currentColor follow theme */
+	color: var(--text-normal);
+}
+
+.fcg-icon-stress {
+	/* Use the original FreshCutGrass stress icon path (uses currentColor) */
+	background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M12%202.02c-5.51%200-9.98%204.47-9.98%209.98s4.47%209.98%209.98%209.98%209.98-4.47%209.98-9.98S17.51%202.02%2012%202.02M11.48%2020v-6.26H8L13%204v6.26h3.35z'%20fill='currentColor'/%3E%3C/svg%3E");
+}
+
+.fcg-icon-fear {
+	/* Use FreshCutGrass fear icon path (percent-encoded SVG), uses currentColor */
+	background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3E%3Cpath%20d='M256%200C114.6%200%200%20100.3%200%20224c0%2070.1%2036.9%20132.6%2094.5%20173.7%209.6%206.9%2015.2%2018.1%2013.5%2029.9l-9.4%2066.2c-1.4%209.6%206%2018.2%2015.7%2018.2H192v-56c0-4.4%203.6-8%208-8h16c4.4%200%208%203.6%208%208v56h64v-56c0-4.4%203.6-8%208-8h16c4.4%200%208%203.6%208%208v56h77.7c9.7%200%2017.1-8.6%2015.7-18.2l-9.4-66.2c-1.7-11.7%203.8-23%2013.5-29.9C475.1%20356.6%20512%20294.1%20512%20224%20512%20100.3%20397.4%200%20256%200zm-96%20320c-35.3%200-64-28.7-64-64s28.7-64%2064-64%2064%2028.7%2064%2064-28.7%2064-64%2064zm192%200c-35.3%200-64-28.7-64-64s28.7-64%2064-64%2064%2028.7%2064%2064-28.7%2064-64%2064z'%20fill='currentColor'/%3E%3C/svg%3E");
+}
+
+.fcg-icon-hp {
+	/* Use FreshCutGrass health icon path (percent-encoded SVG), uses currentColor */
+	background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M16.5%203c-.96%200-1.9.25-2.73.69L12%209h3l-3%2010%201-9h-3l1.54-5.39C10.47%203.61%209.01%203%207.5%203%204.42%203%202%205.42%202%208.5c0%204.13%204.16%207.18%2010%2012.5%205.47-4.94%2010-8.26%2010-12.5C22%205.42%2019.58%203%2016.5%203'%20fill='currentColor'/%3E%3C/svg%3E");
+}

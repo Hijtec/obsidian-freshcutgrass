@@ -1,0 +1,245 @@
+{
+	"blocks": [
+		{
+			"type": "inline",
+			"id": "387b295a6808",
+			"properties": [],
+			"nested": [
+				{
+					"type": "group",
+					"id": "09ba68b9ebe8",
+					"properties": [],
+					"nested": [
+						{
+							"type": "inline",
+							"id": "da8acbd8bb68",
+							"properties": [],
+							"nested": [
+								{
+									"type": "heading",
+									"id": "eb499b5b2bea",
+									"properties": [
+										"name"
+									],
+									"size": 1,
+									"fallback": "-",
+									"conditioned": true
+								},
+								{
+									"type": "inline",
+									"id": "0bd9e898a8e9",
+									"properties": [],
+									"nested": [
+										{
+											"type": "action",
+											"id": "fb1999b98aa8",
+											"icon": "sword",
+											"callback": "try { InitiativeTracker.newEncounter({roll: true, creatures: [monster]}); } catch(e) {}"
+										},
+										{
+											"type": "action",
+											"id": "1a38c8a81ac9",
+											"icon": "plus-circle",
+											"callback": "try { InitiativeTracker.addCreatures([monster]); } catch(e) {}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "property",
+							"id": "9bdaf81a7908",
+							"properties": [
+								"tier",
+								"type"
+							],
+							"fallback": "-",
+							"callback": "return `<b><i>Tier ${monster.tier ?? '-'} ${monster.type ?? '-'}</i></b>`",
+							"display": ""
+						},
+						{
+							"type": "property",
+							"id": "1bbbdb4b58c8",
+							"properties": [
+								"shortDescription"
+							],
+							"fallback": "-",
+							"conditioned": false,
+							"display": ""
+						},
+						{
+							"type": "property",
+							"id": "e9b8abbb4a7a",
+							"properties": [
+								"motivesAndTactics"
+							],
+							"fallback": "-",
+							"conditioned": true,
+							"display": "Motives & Tactics:"
+						}
+					]
+				},
+				{
+					"type": "image",
+					"id": "b9aac989986b",
+					"properties": [
+						"image"
+					],
+					"fallback": "-",
+					"conditioned": false
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "3a39e918abea",
+			"properties": [],
+			"nested": [
+				{
+					"type": "inline",
+					"id": "b82b7ba80b2b",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "480a6b681a78",
+							"properties": [
+								"difficulty"
+							],
+							"fallback": "-",
+							"display": "Difficulty:"
+						},
+						{
+							"type": "property",
+							"id": "2abbd9eae9bb",
+							"properties": [
+								"thresholds"
+							],
+							"fallback": "-",
+							"display": "| Thresholds:",
+							"callback": "return monster.damageThresholds ? `${monster.damageThresholds.major ?? '-'} / ${monster.damageThresholds.severe ?? '-'}` : 'None'"
+						},
+						{
+							"type": "property",
+							"id": "b9eb786bda9b",
+							"properties": [
+								"hitPoints"
+							],
+							"fallback": "-",
+							"display": "| HP:"
+						},
+						{
+							"type": "property",
+							"id": "1bc8d908f91a",
+							"properties": [
+								"stress"
+							],
+							"fallback": "-",
+							"display": "| Stress:"
+						}
+					]
+				},
+				{
+					"type": "inline",
+					"id": "194829791989",
+					"properties": [],
+					"nested": [
+						{
+							"type": "property",
+							"id": "9ad8cb3abb7a",
+							"properties": [
+								"attackModifier"
+							],
+							"fallback": "-",
+							"display": "ATK:",
+							"dice": true
+						},
+						{
+							"type": "inline",
+							"id": "78caa9d8787b",
+							"properties": [],
+							"nested": [
+								{
+									"type": "property",
+									"id": "ea0a4808eb4a",
+									"properties": [
+										"weapon.name"
+									],
+									"fallback": "-",
+									"callback": "return `<b>${monster.weapon?.name ?? '-'}:</b>`",
+									"display": "|"
+								},
+								{
+									"type": "property",
+									"id": "7ba9695a095b",
+									"properties": [
+										"weapon.range"
+									],
+									"fallback": "-",
+									"callback": "return `${monster.weapon?.range ?? '-'}`",
+									"display": ""
+								},
+								{
+									"type": "property",
+									"id": "weapon-damage-dice",
+									"properties": [],
+									"fallback": "-",
+									"display": "|",
+									"dice": true,
+									"callback": "return (monster.weapon?.damage || '').match(/^(\\d+d\\d+(?:[+-]\\d+)*)/)?.[1] || '-'"
+								},
+								{
+									"type": "property",
+									"id": "weapon-damage-type",
+									"properties": [],
+									"fallback": "-",
+									"display": " ",
+									"callback": "const dmg = monster.weapon?.damage || ''; const m = dmg.match(/^[0-9]+d[0-9]+(?:[+-][0-9]+)*\\s*(.*)$/); return m?.[1]?.trim() || '-';"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "property",
+					"id": "7a69e8b8aaa9",
+					"properties": [
+						"experience"
+					],
+					"fallback": "-",
+					"display": "Experience:"
+				}
+			]
+		},
+		{
+			"type": "group",
+			"id": "8aeb195a78a9",
+			"properties": [],
+			"nested": [
+				{
+					"type": "property",
+					"id": "fcg-features-block",
+					"properties": [
+						"features"
+					],
+					"fallback": "-",
+					"heading": "Features",
+					"conditioned": true,
+					"headingProp": false,
+					"callback": "try{ if(!property) return ''; function esc(s){ if(s===null||s===undefined) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;'); } function renderFeatureBody(f){ var value = (f.value!==undefined&&f.value!==null) ? ' ('+esc(f.value)+')' : ''; var type = f.type ? ' - <em>'+esc(f.type)+'</em>' : ''; var uses = (f.uses!==undefined&&f.uses!==null) ? '<p>Uses: '+esc(f.uses)+'</p>' : ''; var c=f.cost||{}; var parts=[]; if(c.fear!=null) parts.push(esc(c.fear)+' fear'); if(c.stress!=null) parts.push(esc(c.stress)+' stress'); if(c.hitPoints!=null) parts.push(esc(c.hitPoints)+' HP'); if(c.hp!=null) parts.push(esc(c.hp)+' HP'); if(c.hit_points!=null) parts.push(esc(c.hit_points)+' HP'); var cost = parts.length? '<p>Cost: '+parts.join(', ')+'</p>':''; var desc = f.description? '<p>'+esc(f.description)+'</p>':''; var flav = (f.flavourText||f.flavorText)? '<p><em>'+esc(f.flavourText||f.flavorText)+'</em></p>':''; var headerExtra = (value||type) ? '<p>'+value+type+'</p>' : ''; return headerExtra + uses + cost + desc + flav; } if(Array.isArray(property)){ return property.map(function(f){ var slug = esc((f.name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-')); var nameHtml = '<div class=\\'property-name trait-name\\'><div class=\\'statblock-markdown\\'><p>'+esc(f.name||'')+'</p></div></div>'; var bodyHtml = '<div class=\\'statblock-markdown\\'>'+renderFeatureBody(f)+'</div>'; return '<div class=\\'statblock-item-container statblock-trait-prop\\'><div class=\\'property '+slug+' features trait\\'>'+nameHtml+bodyHtml+'</div></div>'; }).join(''); } else { /* called per-item: renderer already prints the name slot, so return only the body */ return renderFeatureBody(property); } }catch(e){ return ''; }"
+				}
+			]
+		}
+	],
+	"name": "FCG2",
+	"id": "188b4a2ae81b",
+	"diceParsing": [
+		{
+			"id": "fcg-comma-separated-clean",
+			"desc": "Parses comma-separated dice expressions, ignores spaces, supports XdY, XdY+Z, chained dice, and standalone numbers. Each comma-separated chunk becomes one rollable.",
+			"regex": "([^,]+)",
+			"parser": "let expr = matches[1].trim();\nif (!expr) return null;\n\n// Remove spaces and normalize 'D' to lowercase 'd'\nexpr = expr.replace(/\\s*([dD+-])\\s*/g, m => m.trim().toLowerCase());\n\n// If the expression is a standalone number (e.g., '+3', '-2', '5'), convert to 1d20+N\nif (/^[+-]?\\d+$/.test(expr)) {\n  let n = Number(expr);\n  if (isNaN(n)) return null;\n  expr = `1d20${n >= 0 ? '+' : ''}${n}`;\n}\n\nreturn { text: expr, original };"
+		}
+	],
+	"columnWidth": 500
+}
