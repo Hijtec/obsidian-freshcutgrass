@@ -1,6 +1,10 @@
 on:
   push:
     tags: ["*"]
+
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -32,5 +36,6 @@ jobs:
           body: ${{ env.CHANGELOG }}
           files: |
             main.js
+			server.js
             manifest.json
             styles.css
