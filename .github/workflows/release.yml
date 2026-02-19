@@ -36,6 +36,5 @@ jobs:
           body: ${{ env.CHANGELOG }}
           files: |
             main.js
-			# server.js
             manifest.json
             styles.css
