@@ -23,8 +23,10 @@ jobs:
       - name: Build Release
         run: npm run build
 
-      - name: Copy files to release root
-        run: cp src/server.js server.js
+      - name: Copy release files to release root
+        run: |
+		  cp src/server.js server.js
+          cp src/FCG2.json FCG2.json
 
       - name: Grab Changelog from Commit Message Body
         run: |
@@ -47,3 +49,4 @@ jobs:
             manifest.json
             styles.css
             server.js
+            FCG2.json
