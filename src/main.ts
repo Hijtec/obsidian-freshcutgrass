@@ -1,4 +1,4 @@
-import { Plugin, Notice, Setting, PluginSettingTab, App } from "obsidian";
+import { Plugin, Notice, Setting, PluginSettingTab, App, TFile, normalizePath } from "obsidian";
 import * as http from "http";
 import * as yaml from "js-yaml";
 
@@ -15,11 +15,13 @@ interface FreshCutGrassSettings {
 	importFolder: string;
 	statblockLayoutName: string;
 	serverPort: string;
+	fileNamingBehavior: "override" | "suffix";
 }
 const DEFAULT_SETTINGS: FreshCutGrassSettings = {
 	importFolder: "Adversaries/FCG",
 	statblockLayoutName: "default",
 	serverPort: "27123",
+	fileNamingBehavior: "suffix",
 };
 
 export default class FreshCutGrassPlugin extends Plugin {
@@ -28,7 +30,7 @@ export default class FreshCutGrassPlugin extends Plugin {
 	settings: FreshCutGrassSettings;
 
 	private pendingCommand: null | {
-		type: "create" | "readAll" | "readById" | "updateById" | "deleteById",
+		type: "create" | "readAll" | "readLibrary" | "readById" | "updateById" | "deleteById",
 		payload?: any
 	} = null;
 
@@ -42,6 +44,15 @@ export default class FreshCutGrassPlugin extends Plugin {
 			callback: () => {
 				this.pendingCommand = { type: "readAll" };
 				new Notice("FCG: Asking browser for adversaries…");
+			}
+		});
+
+		this.addCommand({
+			id: "fcg-import-library-adversaries",
+			name: "Fresh Cut Grass: Import Library Adversaries",
+			callback: () => {
+				this.pendingCommand = { type: "readLibrary" };
+				new Notice("FCG: Asking browser for library adversaries…");
 			}
 		});
 
@@ -97,6 +108,7 @@ export default class FreshCutGrassPlugin extends Plugin {
 				return;
 			}
 
+			// Browser polling for commands
 			if (req.url === "/fcg/command" && req.method === "GET") {
 				res.writeHead(200, { "Content-Type": "application/json" });
 				res.end(JSON.stringify(this.pendingCommand));
@@ -129,44 +141,115 @@ export default class FreshCutGrassPlugin extends Plugin {
 }
 
 async function handleIncomingData(plugin: FreshCutGrassPlugin, data: any[]) {
-	const folder = plugin.settings.importFolder;
-
-	if (!plugin.app.vault.getAbstractFileByPath(folder))
-		await plugin.app.vault.createFolder(folder).catch(() => { });
+	const usedPaths = new Set<string>();
 
 	for (const item of data) {
-		const nameSafe = item.name.replace(/[\\\/:*?"<>|]/g, "_");
-		let filename = `${folder}/${nameSafe}.md`;
-		let i = 1;
-		while (await plugin.app.vault.adapter.exists(filename))
-			filename = `${folder}/${nameSafe}_${i++}.md`;
-
 		const yaml = jsonToYaml(item);
-		const content =
-			`---
+		const content = `---
 statblock: inline
+obsidianUIMode: preview
 ---
+
+# Statblock
 
 \`\`\`statblock
 layout: ${plugin.settings.statblockLayoutName}
 ${yaml}
 \`\`\``;
+		const nameSafe = item.name.replace(/[\\\/:*?"<>|]/g, "_");
+		const folder = plugin.settings.importFolder?.trim() ?? "";
+		const basePath = folder
+			? `${folder}/${nameSafe}`
+			: `${nameSafe}`;
 
-		await plugin.app.vault.create(filename, content);
+		let targetPath = normalizePath(`${basePath}.md`);
+
+		if (plugin.settings.fileNamingBehavior === "suffix") {
+			// Always create new file, never override
+
+			let i = 0;
+			let candidatePath = targetPath;
+
+			while (
+				plugin.app.vault.getAbstractFileByPath(candidatePath) ||
+				usedPaths.has(candidatePath)
+			) {
+				i++;
+				candidatePath = normalizePath(`${basePath}_${i}.md`);
+			}
+
+			targetPath = candidatePath;
+
+			await plugin.app.vault.create(targetPath, content);
+			usedPaths.add(targetPath);
+
+		} else if (plugin.settings.fileNamingBehavior === "override") {
+			const existingFile = plugin.app.vault.getAbstractFileByPath(targetPath);
+
+			if (existingFile instanceof TFile && !usedPaths.has(targetPath)) {
+				// Case 1: File exists and not used in this batch → override
+				await plugin.app.vault.modify(existingFile, content);
+				usedPaths.add(targetPath);
+
+			} else if (!existingFile) {
+				// Case 2: File does NOT exist → create normally (no suffix)
+				await plugin.app.vault.create(targetPath, content);
+				usedPaths.add(targetPath);
+
+			} else {
+				// Case 3: Duplicate in the same batch → create suffixed file
+				let i = 1;
+				let candidatePath = normalizePath(`${basePath}_${i}.md`);
+
+				while (
+					plugin.app.vault.getAbstractFileByPath(candidatePath) ||
+					usedPaths.has(candidatePath)
+				) {
+					i++;
+					candidatePath = normalizePath(`${basePath}_${i}.md`);
+				}
+
+				await plugin.app.vault.create(candidatePath, content);
+				usedPaths.add(candidatePath);
+			}
+
+		}
 		new Notice(`Imported ${item.name}`);
 	}
 }
 
 function parseYamlStatblock(fileContent: string): any {
-	const match = fileContent.match(/```statblock\s*\n([\s\S]*?)```/);
-
-	if (!match || typeof match[1] !== "string") {
-		return {};
-	}
+	// The content passed to this function is already extracted from inside the statblock fence
+	// by the export command. So we just need to parse it as YAML.
 
 	try {
-		const parsed = yaml.load(match[1]);
-		return parsed ?? {};
+		// Parse the YAML content
+		const parsed = yaml.load(fileContent);
+
+		if (!parsed || typeof parsed !== "object") {
+			console.error("Parsed YAML is not an object:", parsed);
+			new Notice("Invalid statblock YAML structure");
+			return {};
+		}
+
+		// Remove the layout field as it's not part of the adversary data structure
+		const parsedObj = parsed as Record<string, any>;
+		const { layout, ...adversaryData } = parsedObj;
+
+		// Handle edge cases for browser compatibility
+		// Convert empty strings to null where appropriate
+		if (adversaryData.id === "") {
+			adversaryData.id = null;
+		}
+		if (adversaryData.imageCredit === "") {
+			adversaryData.imageCredit = null;
+		}
+		if (adversaryData.hordeUnitsPerHp === "") {
+			adversaryData.hordeUnitsPerHp = null;
+		}
+
+		console.log("Parsed adversary data:", adversaryData);
+		return adversaryData;
 	} catch (e) {
 		console.error("YAML parse failed", e);
 		new Notice("Invalid statblock YAML");
@@ -178,11 +261,11 @@ function parseYamlStatblock(fileContent: string): any {
 function jsonToYaml(obj: any): string {
 	return yaml.dump(obj, {
 		indent: 2,
-		noRefs: true,        // no anchors &aliases
-		lineWidth: -1,      // do not fold lines
+		noRefs: true,        	// no anchors &aliases
+		lineWidth: -1,      	// do not fold lines
 		quotingType: '"',
-		forceQuotes: true,  // important for statblocks
-		sortKeys: false     // preserve JSON order
+		forceQuotes: true,  	// important for statblocks
+		sortKeys: false     	// preserve JSON order
 	});
 }
 
@@ -207,6 +290,17 @@ class FreshCutGrassSettingTab extends PluginSettingTab {
 				this.plugin.settings.statblockLayoutName = v;
 				await this.plugin.saveSettings();
 			}));
+
+		new Setting(containerEl)
+			.setName("File Naming Behavior")
+			.addDropdown(t => t
+				.addOption("suffix", "Create new with suffix (_1, _2, etc.)")
+				.addOption("override", "Override existing file")
+				.setValue(this.plugin.settings.fileNamingBehavior)
+				.onChange(async v => {
+					this.plugin.settings.fileNamingBehavior = v as "override" | "suffix";
+					await this.plugin.saveSettings();
+				}));
 
 		new Setting(containerEl)
 			.setName("Port to run server on (requires restart)")

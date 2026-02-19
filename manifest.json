@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-freshcutgrass-integration",
 	"name": "FreshCutGrass Integration",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"minAppVersion": "1.5.0",
 	"description": "Create and Import FreshCutGrass adversaries directly from Obsidian notes",
 	"author": "Hijtec",
