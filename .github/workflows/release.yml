@@ -19,7 +19,7 @@ jobs:
         run: npm i
       - name: Build Release
         run: npm run build
-	  - name: Copy files to release root
+     - name: Copy files to release root
         run: cp src/server.js server.js
       - name: Grab Changelog from Commit Message Body
         run: |
@@ -40,4 +40,4 @@ jobs:
             main.js
             manifest.json
             styles.css
-			server.js
+            server.js
