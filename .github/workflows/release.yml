@@ -11,16 +11,21 @@ jobs:
     steps:
       - name: Clone Repository
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
+
       - name: Install
         run: npm i
+
       - name: Build Release
         run: npm run build
-     - name: Copy files to release root
+
+      - name: Copy files to release root
         run: cp src/server.js server.js
+
       - name: Grab Changelog from Commit Message Body
         run: |
           changelog=$(echo -e "$MESSAGE" | sed -n '/^$/,$p' | sed '1d')
@@ -32,6 +37,7 @@ jobs:
           } >> "$GITHUB_ENV"
         env:
           MESSAGE: ${{ github.event.head_commit.message }}
+
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
